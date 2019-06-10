@@ -1424,6 +1424,9 @@ open class PagedGroup(context: Context, attr: AttributeSet?, defStyleAttr: Int, 
             return
         }
         isOverview = type
+        if (!scroller.isFinished) {
+            abortScrollerAnimation(true)
+        }
         zoomHelper.start(isOverview)
     }
 
