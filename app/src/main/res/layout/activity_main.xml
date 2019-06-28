@@ -5,7 +5,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Launcher">
+        tools:context=".Launcher"
+        android:fitsSystemWindows="true"
+        android:clipChildren="false"
+        android:importantForAccessibility="no"
+        android:clipToPadding="false">
 
     <liang.lollipop.llauncher.view.PagedGroup
             android:id="@+id/pagedGroup"
@@ -15,33 +19,28 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello World!"
                 android:gravity="center"
                 android:background="@android:color/holo_green_dark"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello World!"
                 android:gravity="center"
                 android:background="@android:color/holo_red_light"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello World!"
                 android:gravity="center"
                 android:background="@android:color/holo_blue_bright"/>
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello World!"
                 android:gravity="center"
                 android:background="@android:color/holo_orange_dark"/>
 
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello World!"
                 android:gravity="center"
                 android:background="@android:color/holo_purple"/>
 

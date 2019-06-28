@@ -8,8 +8,20 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
-        <activity android:name=".Launcher">
+            android:largeHeap="true"
+            android:restoreAnyVersion="true"
+            android:theme="@style/LauncherTheme">
+        <activity
+                android:name=".Launcher"
+                android:clearTaskOnLaunch="true"
+                android:configChanges="keyboard|keyboardHidden|navigation"
+                android:enabled="true"
+                android:excludeFromRecents="true"
+                android:launchMode="singleTask"
+                android:resumeWhilePausing="true"
+                android:stateNotNeeded="true"
+                android:taskAffinity=""
+                android:theme="@style/LauncherTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

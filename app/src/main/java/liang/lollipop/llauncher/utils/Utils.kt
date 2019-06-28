@@ -11,9 +11,10 @@ import android.view.View
 object Utils {
 }
 
-fun Resources.isRtl(): Boolean {
-    return this.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
-}
+val Resources.isRtl: Boolean
+    get() {
+        return this.configuration.layoutDirection == View.LAYOUT_DIRECTION_RTL
+    }
 
 fun Resources.dp(value: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, this.displayMetrics)
