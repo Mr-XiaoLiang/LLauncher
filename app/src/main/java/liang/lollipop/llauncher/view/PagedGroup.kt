@@ -62,15 +62,9 @@ open class PagedGroup(context: Context, attr: AttributeSet?, defStyleAttr: Int, 
     private var minScale = 0.8F
 
     /**
-     * 内部缩进
-     * 用于避开某些 SystemUI
-     */
-    private val insets = Rect()
-
-    /**
      * 是否从右到左排列
      */
-    private val isRtl = resources.isRtl()
+    private val isRtl = resources.isRtl
 
     /**
      * 每个 Page 的坐标点
@@ -937,8 +931,7 @@ open class PagedGroup(context: Context, attr: AttributeSet?, defStyleAttr: Int, 
     }
 
     private fun getPageNearestToCenterOfScreen(scaledScrollX: Int): Int {
-        val offsetX = paddingLeft + insets.left
-        val screenCenter = offsetX + scaledScrollX + pageWidth / 2
+        val screenCenter = scaledScrollX + pageWidth / 2
         var minDistanceFromScreenCenter = Integer.MAX_VALUE
         var minDistanceFromScreenCenterIndex = -1
         val childCount = childCount
@@ -1165,24 +1158,12 @@ open class PagedGroup(context: Context, attr: AttributeSet?, defStyleAttr: Int, 
             return
         }
 
-        var childWidth = widthSize - paddingLeft - paddingRight - insets.left - insets.right
-        var childHeight = heightSize - paddingTop - paddingBottom - insets.top - insets.bottom
-
-        pageSize.set(0, 0, childWidth, childHeight)
+        // 禁用 Padding，并且放弃对 inset 的处理，专注于对分页的排版
+        pageSize.set(0, 0, widthSize, heightSize)
 
         // 循环测量每一个子 view
-        for (index in 0 until childCount) {
-            val child = getChildAt(index)
-            if (child.visibility == View.GONE) {
-                // 跳过不可见的 View
-                continue
-            }
-            val childWidthMode = MeasureSpec.EXACTLY
-            val childHeightMode = MeasureSpec.EXACTLY
-            child.measure(
-                MeasureSpec.makeMeasureSpec(childWidth, childWidthMode),
-                MeasureSpec.makeMeasureSpec(childHeight, childHeightMode))
-        }
+        measureChildren(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY),
+            MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY))
         setMeasuredDimension(widthSize, heightSize)
     }
 
@@ -1192,8 +1173,8 @@ open class PagedGroup(context: Context, attr: AttributeSet?, defStyleAttr: Int, 
             return
         }
         // 更新得到新的页面尺寸
-        val childWidth = (r - l) - paddingLeft - paddingRight - insets.left - insets.right
-        val childHeight = (b - t) - paddingTop - paddingBottom - insets.top - insets.bottom
+        val childWidth = r - l
+        val childHeight = b - t
 
         // 更新当前的页面尺寸
         pageSize.set(0, 0, childWidth, childHeight)
@@ -1219,31 +1200,29 @@ open class PagedGroup(context: Context, attr: AttributeSet?, defStyleAttr: Int, 
 
     private fun layoutByOverview() {
         val childWidth = overviewWidth
-        val offsetPadding = (pageWidth - childWidth) / 2 + paddingLeft + insets.left
+        val offsetPadding = (pageWidth - childWidth) / 2
         var left = offsetPadding
         val stepWidth = childWidth + pageSpacing
         val offsetY = overviewTop - (pageHeight - overviewHeight) / 2
-        val top = paddingTop + insets.top + offsetY
         whileForLayout{index, child ->
             pageScrolls[index] = left
-            child.layout(left, top, left + pageWidth, top + pageHeight)
+            child.layout(left, offsetY, left + pageWidth, offsetY + pageHeight)
             child.scaleX = minScale
             child.scaleY = minScale
             child.translationX = 0F
             child.translationY = 0F
             left += stepWidth
         }
-        scrollRange = left - pageSpacing + paddingRight + insets.right
+        scrollRange = left - pageSpacing
     }
 
     private fun layoutByFull() {
         val childWidth = pageWidth
         val childHeight = pageHeight
-        val offset = paddingLeft + insets.left
-        var left = offset
-        val top = paddingTop + insets.top
+        var left = 0
+        val top = 0
         whileForLayout{index, child ->
-            pageScrolls[index] = left - offset
+            pageScrolls[index] = left
             child.layout(left, top, left + childWidth, top + childHeight)
             child.scaleX = 1F
             child.scaleY = 1F
